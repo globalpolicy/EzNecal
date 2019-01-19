@@ -1,0 +1,21 @@
+At this point, the program reads the Nepali date off the internet. The API end-point for the current Nepali date is http://rajanmaharjan.com.np/getdate/index.php?dateType=np as noted in http://rajanmaharjan.com.np/blog/todays-nepali-date-api/ 
+However, the website is unreliable - sometimes there is no response from server.
+Will try to do this offline for version 2 - already found a JavaScript module for it in www.ajesh.com.np
+---
+Any code in the renderer process (javacripts of the actual html page displayed in the electron app) needs to be debugged using the web browser (I dunno if it is possible to do with VSCode itself like debugging the main process code but using web browser to debug renderer code is more straightforward and the most obvious way to do it).
+If the developer tools aren't open, no 'debugger;' calls trigger the breakpoint. So, it is customary in development for the main process code to do a rendererProcessBrowserWindowInstance.webContents.openDevTools() after creating the BrowserWindow for the renderer process. But a lot of times, the renderer scripts are already running before the developer tools are completely open, leading to dead 'debugger;' calls.
+There are two main ways around the above problem : 
+1. with the focus given to the developer tools on the renderer browser window, press F5 to reload the page and with it all the renderer scripts that we want to debug - this time, since the dev tools will be open while loading the page, the 'debugger;' calls will successfully result in breakpoints
+2. load the html file in the renderer browser window after a fixed time using setTimeout so that devtools will have fully opened :
+   rendererProcessBrowserWindowInstance.webContents.openDevTools();
+   setTimeout(()=>{
+        rendererProcessBrowserWindowInstance.loadFile('index.html');
+    },1000);
+---
+Links that helped me toward the end of development:
+https://stackoverflow.com/questions/40615837/how-to-compile-an-electron-application-to-a-exe
+https://github.com/electron-userland/electron-packager --> used to compile/package the program into a distribution folder which can later be separately bundled with a packaging tool such as InnoSetup, InstallShield etc. for creating an installer
+
+I used InnoSetup for creating the installer/setup
+---
+Run "npm run-script makefile" to compile/package the program into a distribution folder using electron-packager

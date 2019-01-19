@@ -1,0 +1,17 @@
+{
+  "name": "eznpcal",
+  "version": "1.0.0",
+  "description": "Easy Nepali Calendar",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron .",
+    "makefile":"electron-packager . EzNecal"
+  },
+  "author": "s0ft",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^4.0.1",
+    "electron-packager": "^13.0.1"
+  }
+}

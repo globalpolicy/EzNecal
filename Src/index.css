@@ -1,0 +1,27 @@
+#grid-container{
+    display:grid;
+    grid-template-columns: auto;
+    justify-items: center;
+}
+
+.grid-container-border {
+    border: 5px solid grey;
+    border-radius: 10px;
+}
+
+.nepdate-highlight-on-hover:hover{
+    background-color: #242323;
+}
+
+#nepdate {
+    justify-content: center;
+    -webkit-app-region: no-drag;
+    color: #ff5d00;
+}
+
+
+
+
+body {
+    -webkit-app-region: drag;
+}
