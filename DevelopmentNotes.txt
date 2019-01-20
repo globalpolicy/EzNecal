@@ -19,3 +19,6 @@ https://github.com/electron-userland/electron-packager --> used to compile/packa
 I used InnoSetup for creating the installer/setup
 ---
 Run "npm run-script makefile" to compile/package the program into a distribution folder using electron-packager
+---
+I also learnt that browsers don't update their date/time/milliseconds with the system's as fast. When I changed the system date by one or two days just to check if the display was updating, it took anywhere from 10 seconds to 1.5 minutes for the change to be reflected. I also independently verified this on a test html page on Google Chrome.
+I also learnt how monstrous Electron applications are lol.
