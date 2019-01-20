@@ -9,9 +9,6 @@
     border-radius: 10px;
 }
 
-.nepdate-highlight-on-hover:hover{
-    background-color: #242323;
-}
 
 #nepdate {
     justify-content: center;
@@ -19,8 +16,13 @@
     color: #ff5d00;
 }
 
+.nepdate-highlight-on-hover:hover{
+    background-color: #242323;
+}
 
-
+.nepdate-bold{
+    font-weight: bold;
+}
 
 body {
     -webkit-app-region: drag;
