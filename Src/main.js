@@ -1,7 +1,6 @@
 const {
     app,
-    BrowserWindow,
-    ipcMain
+    BrowserWindow
 } = require("electron");
 const settingsHandler = require("./settingsHandler.js");
 let win;

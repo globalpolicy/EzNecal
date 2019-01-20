@@ -1,20 +1,31 @@
 const electron = require('electron');
 const settingsHandler = require('./settingsHandler.js');
+const nepaliFunctions = require('./nepaliFunctions.js');
 let contextMenu;
 
 
 let loadedSettingsJSON = {};
 
+function onMenuItemBoldClicked(menuItem, browserWindow, event) {
+    document.getElementById("nepdate").classList.toggle("nepdate-bold");
+    settingsHandler.updateField("Bold", menuItem.checked);
+}
+
+function onMenuItemReloadClicked(menuItem, browserWindow, event) {
+    browserWindow.hide(); //hide-show is to remove any black regions that
+    browserWindow.show(); //can show up sometimes on dragging the window around
+    browserWindow.reload();
+}
+
 function onMenuItemAboutClicked(menuItem, browserWindow, event) {
     electron.remote.dialog.showMessageBox({
         type: "info",
         title: "EzNecal",
-        message: 
-        `    Author : s0ft
+        message: `    Author : s0ft
     Blog : c0dew0rth.blogspot.com
     GitHub : globalpolicy
     Email : yciloplabolg@gmail.com
-    Credit : http://www.rajanmaharjan.com.np`
+    Credit : https://www.ashesh.com.np`
     });
 }
 
@@ -48,6 +59,7 @@ function onPageLoaded() {
     loadedSettingsJSON['Border'] = settingsHandler.readField('Border');
     loadedSettingsJSON['HighlightOnHover'] = settingsHandler.readField('HighlightOnHover');
     loadedSettingsJSON['RunOnStartup'] = settingsHandler.readField('RunOnStartup');
+    loadedSettingsJSON['Bold'] = settingsHandler.readField('Bold');
 
     if (loadedSettingsJSON['X'] && loadedSettingsJSON['Y'])
         electron.remote.getCurrentWindow().setPosition(loadedSettingsJSON['X'], loadedSettingsJSON['Y']);
@@ -57,7 +69,8 @@ function onPageLoaded() {
         document.getElementById("grid-container").classList.toggle("grid-container-border");
     if (loadedSettingsJSON['HighlightOnHover'])
         document.getElementById("nepdate").classList.toggle("nepdate-highlight-on-hover");
-
+    if (loadedSettingsJSON['Bold'])
+        document.getElementById("nepdate").classList.toggle("nepdate-bold");
 
     let contextMenuTemplate = [{
             label: "Topmost",
@@ -84,6 +97,12 @@ function onPageLoaded() {
             checked: loadedSettingsJSON['RunOnStartup']
         },
         {
+            label: "Bold",
+            type: "checkbox",
+            click: onMenuItemBoldClicked,
+            checked: loadedSettingsJSON['Bold']
+        },
+        {
             type: "separator"
         },
         {
@@ -92,7 +111,7 @@ function onPageLoaded() {
         },
         {
             label: "Reload",
-            role: "reload"
+            click: onMenuItemReloadClicked
         },
         {
             label: "Quit",
@@ -104,37 +123,11 @@ function onPageLoaded() {
         e.preventDefault();
         contextMenu.popup();
     });
+
+    document.querySelector("div#nepdate").textContent = nepaliFunctions.getNepaliDate();
+    setInterval(() => {
+        document.querySelector("div#nepdate").textContent = nepaliFunctions.getNepaliDate();
+    }, 60000);
 }
-
-fetch("http://rajanmaharjan.com.np/getdate/index.php?dateType=np", {
-        cache: "reload"
-    })
-    .then((response) => {
-        if(response.ok)
-            return response.text();
-        else{
-            electron.remote.dialog.showMessageBox({
-                type:"error",
-                title:"Error",
-                message:`Server responded with error : ${response.statusText}`
-            });
-            electron.remote.app.quit();
-        }
-    })
-    .catch((error)=>{
-        electron.remote.dialog.showMessageBox({
-            type:"error",
-            title:"Error",
-            message:`No response from server. \nEither cannot reach server or internet connection problem. \nError message : ${error.message}`
-        });
-        electron.remote.app.quit();
-    })
-    .then((html) => {
-        let domParser = new DOMParser();
-        let doc = domParser.parseFromString(html, "text/html");
-        let nepaliDate = doc.querySelector("span#nepali-date").textContent;
-        document.querySelector("div#nepdate").textContent = nepaliDate;
-    });
-
 
 window.onload = onPageLoaded;
